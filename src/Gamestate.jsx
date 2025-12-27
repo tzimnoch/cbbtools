@@ -119,14 +119,26 @@ export const initialGameState = {
 }
 
 export function gameStateReducer(gs, action) {
-  console.log("Pre: " + JSON.stringify(action));
+  console.log('Action: ' + JSON.stringify(action));
   switch(action.type) {
     case 'moveCard': return assignCard({rank: action.rank, suit: action.suit, gameState: gs})
     case 'setActivePlayer': return { ...gs, active_player: action.player }
     case 'rotateHands': return rotateHands(gs)
     case 'generateBridgewinnersHandviewerString': return handviewerExport(gs)
+
+    case 'saveToLocal': localStorage.setItem('cbb_gamestate', JSON.stringify(gs)); return gs
+    case 'loadFromLocal': return JSON.parse(localStorage.getItem('cbb_gamestate'))
+
+    /*****************
+     * TODOs
+     * ***************/
+    // TODO: implement save/load from file
+    case 'saveToFile': return gs
+    case 'loadFromFile': return gs
+
     // TODO: implement setBoardNumber, to update dealer/vulnerability
     case 'setBoardNumber': return { ...gs, board_number: action.board_number }
+
     default: return gs
   }
 }
