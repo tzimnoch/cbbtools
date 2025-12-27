@@ -13,18 +13,16 @@ export function keyboardHandler({event, dispatchGameState}) {
     case 'ArrowUp':    return dispatchGameState({type: 'setActivePlayer', player: 'north'})
     case 'ArrowLeft':  return dispatchGameState({type: 'setActivePlayer', player: 'west'})
     case 'ArrowRight': return dispatchGameState({type: 'setActivePlayer', player: 'east'})
+
     case 'S':
-    case 's':
-      return activeSuit = 'spades'
+    case 's': return activeSuit = 'spades'
     case 'H':
-    case 'h':
-      return activeSuit = 'hearts'
+    case 'h': return activeSuit = 'hearts'
     case 'D':
-    case 'd':
-      return activeSuit = 'diamonds'
+    case 'd': return activeSuit = 'diamonds'
     case 'C':
-    case 'c':
-      return activeSuit = 'clubs'
+    case 'c': return activeSuit = 'clubs'
+
     case 'A':
     case 'a': return dispatchGameState({type: 'moveCard', rank: 12, suit: activeSuit});
     case 'K':

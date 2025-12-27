@@ -50,45 +50,54 @@ const App = () => {
   const generateBridgewinnersHandviewerString = () => { return dispatchGameState({type: 'generateBridgewinnersHandviewerString'}) }
   const selectBoardNumber = (event) => { return dispatchGameState({type: 'setBoardNumber', board_number: event.target.value}) }
 
+  const saveToLocal = (event) => {   return dispatchGameState({type: 'saveToLocal'}) }
+  const loadFromLocal = (event) => { return dispatchGameState({type: 'loadFromLocal'}) }
+  const saveToFile = (event) => {    return dispatchGameState({type: 'saveToFile'}) }
+  const loadFromFile = (event) => {  return dispatchGameState({type: 'loadFromFile'}) }
+
   return (
     <div>
     <div className={styles.content} onKeyUp={handleKeyUp} tabIndex="1" ref={startWithFocus}>
       <div className={styles.flex}>
         <div className={styles.flex}>
           <p>
-            <label for="boardnumber">Board Number: </label>
+            <label htmlFor="boardnumber">Board Number: </label>
             <select name="boardnumber" id="boardnumber" onChange={selectBoardNumber}>
-              {[...Array(36)].map((x, i) => <option value={i+1}>{i+1}</option>)}          
+              {[...Array(36)].map((x, i) => <option key={i+1} value={i+1}>{i+1}</option>)}
             </select>
           </p>
         </div>
         <div className={styles.flex}>
           <Hand hand={gs['north'].hand} direction='north' active={gs.active_player == 'north'} />
         </div>
-        <div className={styles.flex}>
-          <p>Does this balance things back out again?</p>
-        </div>
+        <div className={styles.flex} />
       </div>
       <div className={styles.flex}>
-        <div>
+        <div className={styles.flex}>
           <Hand hand={gs.west.hand} direction='west' active={gs.active_player == 'west'} />
         </div>
-        <div>
+        <div className={styles.flex}>
           <Hand hand={gs['deck']} direction='center' />
         </div>
-        <div>
+        <div className={styles.flex}>
           <Hand hand={gs['east'].hand} direction='east' active={gs.active_player == 'east'} />
         </div>
       </div>
       <div className={styles.flex}>
-        <div />
-        <div>
+        <div className={styles.flex} />
+        <div className={styles.flex}>
           <Hand hand={gs['south'].hand} direction='south' active={gs.active_player == 'south'} />
         </div>
-        <div />
+        <div className={styles.flex} />
       </div>
       <div>
         <h3>Buttons</h3>
+        <button onClick={saveToLocal}>Save Local</button>
+        <button onClick={loadFromLocal}>Load Local</button>
+        <button onClick={saveToFile} disabled>Save to file</button>
+        <button onClick={loadFromFile} disabled>Load from file</button>
+        <br />
+        <br />
         <button onClick={rotateHands}>Rotate clockwise</button>&nbsp;&nbsp;
         <button onClick={generateBridgewinnersHandviewerString}>Generate Bridgewinners handviewer</button>
         <p>{gs.handviewer_string ? gs.handviewer_string + ' ✅ copied' : ''}</p>

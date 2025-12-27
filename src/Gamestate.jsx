@@ -113,7 +113,9 @@ export const initialGameState = {
   vulnerability: 'none',
   scoring: 'matchpoints',
   active_player: 'north',
-  handviewer_string: null
+  handviewer_string: null,
+
+  phase: 'edit'
 }
 
 export function gameStateReducer(gs, action) {
