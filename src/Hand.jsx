@@ -16,14 +16,14 @@ const isVulnerable = (vulnerability, direction) => {
 }
 
 export default function Hand({hand, direction, active}) {
-  var vulStyle = isVulnerable('all', direction) ? '{styles.vulnerable} {styles.hand}' : 'styles.hand'
-  var s = []
-  s.push(`${styles.hand}`)
-  if (active) s.push(`${styles.active}`)
+  var handStyles = [`${styles.hand}`]
+  if (active) handStyles.push(`${styles.active}`)
+  var playerStyles = [`${styles.player}`]
+  if (isVulnerable('ns', direction)) playerStyles.push(`${styles.vulnerable}`)
   
   return (
-    <div className={s.join(' ')}>
-      <div className={styles.vulnerable}>{direction}</div>
+    <div className={handStyles.join(' ')}>
+      <div className={playerStyles.join(' ')}>{direction}</div>
       <p>&spades; {hand.map(filterSuit('spades')).sort(numericalSort).map(displayCard)}</p>
       <p>&hearts; {hand.map(filterSuit('hearts')).sort(numericalSort).map(displayCard)}</p>
       <p>&diams; {hand.map(filterSuit('diamonds')).sort(numericalSort).map(displayCard)}</p>
