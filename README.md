@@ -1,10 +1,11 @@
-# Rsbuild project
+# CBB Tools
 
 ## About
 
-CBB Tools is a React-based project for editing, analyzing, and running simulations on bridge hands. The initial
-emphasis will be on editing features not available or difficult to use with existing tools. The second round of
-development will focus on accessibility. Later development will focus on analysis and simulations.
+CBB Tools is a React-based project for editing, analyzing, and running simulations on bridge hands.
+
+The initial emphasis will be on editing features not available or difficult to use with existing tools. The second
+round of development will focus on accessibility. Later development will focus on analysis and simulations.
 
 ## Setup
 

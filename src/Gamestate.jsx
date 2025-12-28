@@ -66,7 +66,7 @@ function handviewerExport(gs) {
   // &w=ca954dkj8742sk62h       west
   // &d=N                       dealer
   // &v=-                       vulnerability (need to get examples. - = no vul)
-  // &b=1                       ???
+  // &b=1                       board number
   // &a=ppp5sppp                auction
   var returnString = "{ghand "
   // TODO: Dry this up
@@ -95,6 +95,78 @@ function handviewerExport(gs) {
     ...gs,
     handviewer_string: returnString
   }
+}
+
+function parseHand(h) {
+  var currentSuit = null
+  var currentRank = null
+
+  var hand = []
+
+  for(var char of h.split('')) {
+    switch (char) {
+    case 'c': currentSuit = 'clubs'; break
+    case 'd': currentSuit = 'diamonds'; break
+    case 'h': currentSuit = 'hearts'; break
+    case 's': currentSuit = 'spades'; break
+
+    case '2': hand.push(newCard(currentSuit, 0)); break
+    case '3': hand.push(newCard(currentSuit, 1)); break
+    case '4': hand.push(newCard(currentSuit, 2)); break
+    case '5': hand.push(newCard(currentSuit, 3)); break
+    case '6': hand.push(newCard(currentSuit, 4)); break
+    case '7': hand.push(newCard(currentSuit, 5)); break
+    case '8': hand.push(newCard(currentSuit, 6)); break
+    case '9': hand.push(newCard(currentSuit, 7)); break
+    case 't': hand.push(newCard(currentSuit, 8)); break
+    case '0': hand.push(newCard(currentSuit, 8)); break   // can use 10 instead of t
+    case 'j': hand.push(newCard(currentSuit, 9)); break
+    case 'q': hand.push(newCard(currentSuit, 10)); break
+    case 'k': hand.push(newCard(currentSuit, 11)); break
+    case 'a': hand.push(newCard(currentSuit, 12)); break
+
+    default: break
+    }
+  }
+
+  return { hand: hand }
+}
+
+const HANDVIEWER_HTML = 'handviewer.html?'
+const GHAND = '{ghand '
+function parseHandviewer(gs, hv) {
+  const handviewHtmlIndex = hv.indexOf(HANDVIEWER_HTML)
+  const ghandIndex = hv.indexOf(GHAND)
+  if (handviewHtmlIndex > -1) {
+    hv = hv.slice(handviewHtmlIndex + HANDVIEWER_HTML.length)
+  } else if (ghandIndex > -1) {
+    hv = hv.slice(ghandIndex + GHAND.length)
+  } else {
+    // string header not found, return previous game state
+    return gs
+  }
+
+  var gs = initialGameState
+
+  for (var param of hv.split('&')) {
+    switch (param.charAt(0)) {
+    case 'n': gs = {...gs, north: parseHand(param.slice(2)) }; break
+    case 'e': gs = {...gs, east:  parseHand(param.slice(2)) }; break
+    case 'w': gs = {...gs, west:  parseHand(param.slice(2)) }; break
+    case 's': gs = {...gs, south: parseHand(param.slice(2)) }; break
+
+    case 'b': gs = {...gs, board_number: param.slice(2) }; break
+
+    // TODO: implement dealer, vulnerability, auction
+    case 'd':
+    case 'v':
+    case 'a':
+    }
+  }
+
+  // TODO: strip deck of dealt cards
+
+  return gs
 }
 
 /******************
@@ -128,6 +200,7 @@ export function gameStateReducer(gs, action) {
 
     case 'saveToLocal': localStorage.setItem('cbb_gamestate', JSON.stringify(gs)); return gs
     case 'loadFromLocal': return JSON.parse(localStorage.getItem('cbb_gamestate'))
+    case 'loadFromHandviewer': return parseHandviewer(gs, action.handviewer_string)
 
     /*****************
      * TODOs
