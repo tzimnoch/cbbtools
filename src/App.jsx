@@ -1,11 +1,12 @@
 import styles from './App.module.css'
 
-import { useState, useCallback, useReducer, useRef } from 'react'
+import { useState, useCallback, useReducer } from 'react'
 
-import Hand from './Hand'
-import { keyboardHandler } from './KeyboardHandler'
+import Controls from './Controls'
 import { initialGameState, gameStateReducer, handviewerExport } from './Gamestate'
-
+import Hand from './Hand'
+import Instructions from './Instructions'
+import { keyboardHandler } from './KeyboardHandler'
 
 /*******************
  * TODOS
@@ -45,17 +46,8 @@ import { initialGameState, gameStateReducer, handviewerExport } from './Gamestat
 const App = () => {
   const [gs, dispatchGameState] = useReducer(gameStateReducer, initialGameState)
   const handleKeyUp = (event) => { keyboardHandler({event, dispatchGameState}) }
-  const rotateHands = (event) => { return dispatchGameState({type: 'rotateHands'}) }
   const startWithFocus = useCallback((a) => { if (a) a.focus(); })
-  const generateBridgewinnersHandviewerString = () => { return dispatchGameState({type: 'generateBridgewinnersHandviewerString'}) }
   const selectBoardNumber = (event) => { return dispatchGameState({type: 'setBoardNumber', board_number: event.target.value}) }
-
-  const saveToLocal = (event) => {   return dispatchGameState({type: 'saveToLocal'}) }
-  const loadFromLocal = (event) => { return dispatchGameState({type: 'loadFromLocal'}) }
-  const saveToFile = (event) => {    return dispatchGameState({type: 'saveToFile'}) }
-  const loadFromFile = (event) => {  return dispatchGameState({type: 'loadFromFile'}) }
-  const loadFromHandviewerRef = useRef()
-  const loadFromHandviewer = (event) => { return dispatchGameState({type: 'loadFromHandviewer', handviewer_string: loadFromHandviewerRef.current.value}) }
 
   return (
     <div>
@@ -93,29 +85,8 @@ const App = () => {
         <div className={styles.flex} />
       </div>
     </div>
-      <div>
-        <h3>Buttons</h3>
-        <button onClick={saveToLocal}>Save Local</button>
-        <button onClick={loadFromLocal}>Load Local</button>
-        <button onClick={saveToFile} disabled>Save to file</button>
-        <button onClick={loadFromFile} disabled>Load from file</button>
-        <br />
-        <br />
-        <label htmlFor='hvstring'>Handviewer String: </label>
-        <input id='hvstring' type='text' ref={loadFromHandviewerRef} />
-        <button onClick={loadFromHandviewer}>Load from handviewer</button>
-        <br />
-        <br />
-        <button onClick={rotateHands}>Rotate clockwise</button>
-        <button onClick={generateBridgewinnersHandviewerString}>Generate Bridgewinners handviewer</button>
-        <p>{gs.handviewer_string ? gs.handviewer_string + ' ✅ copied' : ''}</p>
-      </div>
-      <div>
-        <h3>Instructions</h3>
-        <p>Use arrow keys to navigate between north, south, east and west. Select suit with <u>S</u>pades, <u>H</u>earts, <u>D</u>iamonds and <u>C</u>lubs.
-          Then select the cards.
-        </p>
-      </div>
+      <Controls dispatchGameState={dispatchGameState} gs={gs}/>
+      <Instructions />
     </div>
   )
 }
