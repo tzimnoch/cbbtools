@@ -1,6 +1,6 @@
 import styles from './App.module.css'
 
-import { useState, useCallback, useReducer } from 'react'
+import { useCallback, useReducer } from 'react'
 
 import Controls from './Controls'
 import { initialGameState, gameStateReducer, handviewerExport } from './Gamestate'
