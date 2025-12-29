@@ -12,7 +12,6 @@
    |mb|P
    |mb|P
    |mb|1N
-   -- an is comment on previous bid
    |an|notrump opener. Could have 5M. -- 2-5 !C; 2-5 !D; 2-5 !H; 2-5 !S; 15-17 HCP; 18- total points
    |mb|P
    |mb|2C
@@ -53,9 +52,14 @@ export function parseLin(input) {
       break;
     case 'mb': // make bid, d = x, r = xx, n = nt
       break;
-    case 'an': // annotation
-      break;
     case 'pc': // play card
+      break;
+    // Note: Slightly awkward. The stream appends each output with | so there's a trailing | with no data after it.
+    case '':
+      break;
+
+    // unimplemented fields
+    case 'an': // annotation, comment/alert/description of the previous bid -- throw away for now
       break;
     case 'st': // ?
     case 'rh': // ?
