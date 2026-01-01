@@ -2,6 +2,8 @@ import styles from './App.module.css'
 
 import { useCallback, useReducer } from 'react'
 
+import Auction from './Auction'
+import BiddingBox from './BiddingBox'
 import Controls from './Controls'
 import { initialGameState, gameStateReducer, handviewerExport } from './Gamestate'
 import Hand from './Hand'
@@ -78,14 +80,18 @@ const App = () => {
         </div>
       </div>
       <div className={styles.flex}>
-        <div className={styles.flex} />
+        <div className={styles.flex}>
+          <Auction gs={gs} />
+        </div>
         <div className={styles.flex}>
           <Hand hand={gs['south'].hand} direction='south' active={gs.active_player == 'south'} />
         </div>
-        <div className={styles.flex} />
+        <div className={styles.flex}>
+          <BiddingBox dispatchGamestate={dispatchGameState} gs={gs} />
+        </div>
       </div>
     </div>
-      <Controls dispatchGameState={dispatchGameState} gs={gs}/>
+      <Controls dispatchGameState={dispatchGameState} gs={gs} />
       <Instructions />
     </div>
   )
