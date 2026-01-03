@@ -1,14 +1,10 @@
+import { parseInput } from './bridge-formats/Parser'
+import { newCard } from './Card'
+
 const suits = ['spades', 'hearts', 'diamonds', 'clubs']
 const cards = [12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0]
 const cartesian = (...a) => a.reduce((a, b) => a.flatMap(d => b.map(e => newCard(d, e))))
 const deck = cartesian(suits, cards)
-
-function newCard(suit, value) {
-  return {
-    suit: suit,
-    value: value
-  }
-}
 
 function removeCard(hand, card) {
   var index = hand.findIndex((c) => c.suit == card.suit && c.value == card.value);
@@ -37,7 +33,7 @@ function assignCard({rank, suit, gameState}) {
   return {
     ...gameState,
     [gameState.active_player]: {
-      // ...gameState[gameState.active_player],
+      // ...gameState[gameState.active_player],   // will be necessary when players have more than hands.
       hand: addCard(gameState[gameState.active_player].hand, card)
     }
   }
@@ -59,6 +55,7 @@ const displayCard = (c) => cardArray[c];
 const numericalSort = (a, b) => b - a;
 const filterSuit = (suit) => function(card) { if (card.suit == suit) return card.value; }
 
+// TODO: Move this to Handviewer.jsx
 function handviewerExport(gs) {
   // n=ckqj6dq963sqjha96        north
   // &s=c1083ds97hkq875432      south
@@ -97,78 +94,6 @@ function handviewerExport(gs) {
   }
 }
 
-function parseHand(h) {
-  var currentSuit = null
-  var currentRank = null
-
-  var hand = []
-
-  for(var char of h.split('')) {
-    switch (char) {
-    case 'c': currentSuit = 'clubs'; break
-    case 'd': currentSuit = 'diamonds'; break
-    case 'h': currentSuit = 'hearts'; break
-    case 's': currentSuit = 'spades'; break
-
-    case '2': hand.push(newCard(currentSuit, 0)); break
-    case '3': hand.push(newCard(currentSuit, 1)); break
-    case '4': hand.push(newCard(currentSuit, 2)); break
-    case '5': hand.push(newCard(currentSuit, 3)); break
-    case '6': hand.push(newCard(currentSuit, 4)); break
-    case '7': hand.push(newCard(currentSuit, 5)); break
-    case '8': hand.push(newCard(currentSuit, 6)); break
-    case '9': hand.push(newCard(currentSuit, 7)); break
-    case 't': hand.push(newCard(currentSuit, 8)); break
-    case '0': hand.push(newCard(currentSuit, 8)); break   // can use 10 instead of t
-    case 'j': hand.push(newCard(currentSuit, 9)); break
-    case 'q': hand.push(newCard(currentSuit, 10)); break
-    case 'k': hand.push(newCard(currentSuit, 11)); break
-    case 'a': hand.push(newCard(currentSuit, 12)); break
-
-    default: break
-    }
-  }
-
-  return { hand: hand }
-}
-
-const HANDVIEWER_HTML = 'handviewer.html?'
-const GHAND = '{ghand '
-function parseHandviewer(gs, hv) {
-  const handviewHtmlIndex = hv.indexOf(HANDVIEWER_HTML)
-  const ghandIndex = hv.indexOf(GHAND)
-  if (handviewHtmlIndex > -1) {
-    hv = hv.slice(handviewHtmlIndex + HANDVIEWER_HTML.length)
-  } else if (ghandIndex > -1) {
-    hv = hv.slice(ghandIndex + GHAND.length)
-  } else {
-    // string header not found, return previous game state
-    return gs
-  }
-
-  var gs = initialGameState
-
-  for (var param of hv.split('&')) {
-    switch (param.charAt(0)) {
-    case 'n': gs = {...gs, north: parseHand(param.slice(2)) }; break
-    case 'e': gs = {...gs, east:  parseHand(param.slice(2)) }; break
-    case 'w': gs = {...gs, west:  parseHand(param.slice(2)) }; break
-    case 's': gs = {...gs, south: parseHand(param.slice(2)) }; break
-
-    case 'b': gs = {...gs, board_number: param.slice(2) }; break
-
-    // TODO: implement dealer, vulnerability, auction
-    case 'd':
-    case 'v':
-    case 'a':
-    }
-  }
-
-  // TODO: strip deck of dealt cards
-
-  return gs
-}
-
 /******************
  *
  * Exports
@@ -187,7 +112,11 @@ export const initialGameState = {
   active_player: 'north',
   handviewer_string: null,
 
-  phase: 'edit'
+  phase: 'edit',
+
+  settings: {
+    confirm_bids: true
+  }
 }
 
 export function gameStateReducer(gs, action) {
@@ -200,7 +129,12 @@ export function gameStateReducer(gs, action) {
 
     case 'saveToLocal': localStorage.setItem('cbb_gamestate', JSON.stringify(gs)); return gs
     case 'loadFromLocal': return JSON.parse(localStorage.getItem('cbb_gamestate'))
-    case 'loadFromHandviewer': return parseHandviewer(gs, action.handviewer_string)
+    case 'loadFromHandviewer': return parseInput(gs, action.handviewer_string)
+
+    /*****************
+     * Settings
+     * ***************/
+    case 'toggleConfirmBids': return { ...gs, settings: {...gs.settings, confirm_bids: !gs.settings.confirm_bids }}
 
     /*****************
      * TODOs
