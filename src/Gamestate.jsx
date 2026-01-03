@@ -112,7 +112,11 @@ export const initialGameState = {
   active_player: 'north',
   handviewer_string: null,
 
-  phase: 'edit'
+  phase: 'edit',
+
+  settings: {
+    confirm_bids: true
+  }
 }
 
 export function gameStateReducer(gs, action) {
@@ -126,6 +130,11 @@ export function gameStateReducer(gs, action) {
     case 'saveToLocal': localStorage.setItem('cbb_gamestate', JSON.stringify(gs)); return gs
     case 'loadFromLocal': return JSON.parse(localStorage.getItem('cbb_gamestate'))
     case 'loadFromHandviewer': return parseInput(gs, action.handviewer_string)
+
+    /*****************
+     * Settings
+     * ***************/
+    case 'toggleConfirmBids': return { ...gs, settings: {...gs.settings, confirm_bids: !gs.settings.confirm_bids }}
 
     /*****************
      * TODOs

@@ -9,6 +9,7 @@ import { initialGameState, gameStateReducer, handviewerExport } from './Gamestat
 import Hand from './Hand'
 import Instructions from './Instructions'
 import { keyboardHandler } from './KeyboardHandler'
+import Settings from './Settings'
 
 /*******************
  * TODOS
@@ -52,45 +53,47 @@ const App = () => {
   const selectBoardNumber = (event) => { return dispatchGameState({type: 'setBoardNumber', board_number: event.target.value}) }
 
   return (
-    <div>
-    <div className={styles.content} onKeyUp={handleKeyUp} tabIndex="1" ref={startWithFocus}>
-      <div className={styles.flex}>
+    <div className={styles.content}>
+      <div onKeyUp={handleKeyUp} tabIndex="1" ref={startWithFocus}>
         <div className={styles.flex}>
-          <p>
-            <label htmlFor="boardnumber">Board Number: </label>
-            <select name="boardnumber" id="boardnumber" onChange={selectBoardNumber}>
-              {[...Array(36)].map((x, i) => <option key={i+1} value={i+1}>{i+1}</option>)}
-            </select>
-          </p>
+          <div className={styles.flex}>
+            <p>
+              <label htmlFor="boardnumber">Board Number: </label>
+              <select name="boardnumber" id="boardnumber" onChange={selectBoardNumber}>
+                {[...Array(36)].map((x, i) => <option key={i+1} value={i+1}>{i+1}</option>)}
+              </select>
+            </p>
+          </div>
+          <div className={styles.flex}>
+            <Hand hand={gs['north'].hand} direction='north' active={gs.active_player == 'north'} />
+          </div>
+          <div className={styles.flex}>
+            <Settings dispatchGameState={dispatchGameState} gs={gs} />
+          </div>
         </div>
         <div className={styles.flex}>
-          <Hand hand={gs['north'].hand} direction='north' active={gs.active_player == 'north'} />
+          <div className={styles.flex}>
+            <Hand hand={gs.west.hand} direction='west' active={gs.active_player == 'west'} />
+          </div>
+          <div className={styles.flex}>
+            <Hand hand={gs['deck']} direction='center' />
+          </div>
+          <div className={styles.flex}>
+            <Hand hand={gs['east'].hand} direction='east' active={gs.active_player == 'east'} />
+          </div>
         </div>
-        <div className={styles.flex} />
+        <div className={styles.flex}>
+          <div className={styles.flex}>
+            <Auction gs={gs} />
+          </div>
+          <div className={styles.flex}>
+            <Hand hand={gs['south'].hand} direction='south' active={gs.active_player == 'south'} />
+          </div>
+          <div className={styles.flex}>
+            <BiddingBox dispatchGamestate={dispatchGameState} gs={gs} />
+          </div>
+        </div>
       </div>
-      <div className={styles.flex}>
-        <div className={styles.flex}>
-          <Hand hand={gs.west.hand} direction='west' active={gs.active_player == 'west'} />
-        </div>
-        <div className={styles.flex}>
-          <Hand hand={gs['deck']} direction='center' />
-        </div>
-        <div className={styles.flex}>
-          <Hand hand={gs['east'].hand} direction='east' active={gs.active_player == 'east'} />
-        </div>
-      </div>
-      <div className={styles.flex}>
-        <div className={styles.flex}>
-          <Auction gs={gs} />
-        </div>
-        <div className={styles.flex}>
-          <Hand hand={gs['south'].hand} direction='south' active={gs.active_player == 'south'} />
-        </div>
-        <div className={styles.flex}>
-          <BiddingBox dispatchGamestate={dispatchGameState} gs={gs} />
-        </div>
-      </div>
-    </div>
       <Controls dispatchGameState={dispatchGameState} gs={gs} />
       <Instructions />
     </div>
