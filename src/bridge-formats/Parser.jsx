@@ -2,8 +2,6 @@ import { GHAND_PREFIX, HANDVIEWER_PREFIX, LIN_PREFIX } from './Constants'
 import { parseLin } from './Lin'
 import { parseHandviewer } from './Handviewer'
 
-// TODO: Refactor handviewer/pbn/lin import exports to their own file.
-
 export function parseInput(gs, input) {
   var gs2 = null
 

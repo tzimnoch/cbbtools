@@ -36,6 +36,53 @@ function parseHand(h) {
   return { hand: hand }
 }
 
+function parseAuction(a) {
+  var auction = []
+
+  for (let i = 0; i < a.length; i++) {
+    switch (a.charAt(i).toLowerCase()) {
+    case 'p': auction.push('p'); break
+
+    case '1':
+    case '2':
+    case '3':
+    case '4':
+    case '5':
+    case '6':
+    case '7': auction.push(a.charAt(i) + a.charAt(i+1)); i++; break
+
+    case 'd':
+    case 'x': auction.push('x'); break
+
+    case 'r': auction.push('r'); break
+
+    // TODO: Set contract without an auction, e.g., a=-6hrw means final contract is 6H** by West without an auction
+    // May need a hook at a different level since this will alter the gamestate object and 
+    case '-': alert('Feature not yet implemented.'); break
+    }
+  }
+
+  return auction
+}
+
+function parseDealer(dealer) {
+  switch (dealer.toLowerCase()) {
+  case 'e': return 'east'
+  case 'n': return 'north'
+  case 's': return 'south'
+  case 'w': return 'west'
+  }
+}
+
+function parseVulnerability(vulnerability) {
+  switch(vulnerability.toLowerCase()) {
+  case 'e': return 'ew'
+  case 'n': return 'ns'
+  case 'b': return 'all'
+  case '-': return 'none'
+  }
+}
+
 export function parseHandviewer(input) {
   var gs = initialGameState
 
@@ -48,14 +95,16 @@ export function parseHandviewer(input) {
 
     case 'b': gs = {...gs, board_number: param.slice(2) }; break
 
-    // TODO: implement dealer, vulnerability, auction
-    case 'd':
-    case 'v':
-    case 'a':
+    case 'd': gs = {...gs, dealer: parseDealer(param.slice(2)) }; break
+    case 'v': gs = {...gs, vulnerability: parseVulnerability(param.slice(2)) }; break
+    case 'a': gs = {...gs, auction: parseAuction(param.slice(2)) }; break
+
+    // TODO: implement play
+    case 'p':
     }
   }
 
-  // // TODO: strip deck of dealt cards
+  // TODO: strip deck of dealt cards
 
   return gs
 }
