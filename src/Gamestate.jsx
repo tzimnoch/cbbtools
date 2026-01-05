@@ -39,6 +39,24 @@ function assignCard({rank, suit, gameState}) {
   }
 }
 
+function nextDealer(d) {
+  switch (d) {
+  case 'south': return 'west'
+  case 'west': return 'north'
+  case 'north': return 'east'
+  case 'east': return 'south'
+  default: return d
+  }
+}
+
+function rotateVulnerability(v) {
+  switch (v) {
+  case 'ns': return 'ew'
+  case 'ew': return 'ns'
+  default: return v
+  }
+}
+
 function rotateHands(gs) {
   // TODO: rotate vulnerability, dealer/auction, play of hand, player names?
   return {
@@ -46,7 +64,9 @@ function rotateHands(gs) {
     north: gs.west,
     west:  gs.south,
     south: gs.east,
-    east:  gs.north
+    east:  gs.north,
+    dealer: nextDealer(gs.dealer),
+    vulnerability: rotateVulnerability(gs.vulnerability)
   }
 }
 

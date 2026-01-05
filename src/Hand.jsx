@@ -15,11 +15,11 @@ const isVulnerable = (vulnerability, direction) => {
   }
 }
 
-export default function Hand({hand, direction, active}) {
+export default function Hand({hand, direction, vulnerability, active}) {
   var handStyles = [`${styles.hand}`]
   if (active) handStyles.push(`${styles.active}`)
   var playerStyles = [`${styles.player}`]
-  if (isVulnerable('ns', direction)) playerStyles.push(`${styles.vulnerable}`)
+  if (isVulnerable(vulnerability, direction)) playerStyles.push(`${styles.vulnerable}`)
   
   return (
     <div className={handStyles.join(' ')}>

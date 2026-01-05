@@ -65,7 +65,7 @@ const App = () => {
             </p>
           </div>
           <div className={styles.flex}>
-            <Hand hand={gs['north'].hand} direction='north' active={gs.active_player == 'north'} />
+            <Hand hand={gs['north'].hand} direction='north' active={gs.active_player == 'north'} vulnerability={gs.vulnerability} />
           </div>
           <div className={styles.flex}>
             <Settings dispatchGameState={dispatchGameState} gs={gs} />
@@ -73,13 +73,13 @@ const App = () => {
         </div>
         <div className={styles.flex}>
           <div className={styles.flex}>
-            <Hand hand={gs.west.hand} direction='west' active={gs.active_player == 'west'} />
+            <Hand hand={gs.west.hand} direction='west' active={gs.active_player == 'west'} vulnerability={gs.vulnerability} />
           </div>
           <div className={styles.flex}>
             <Hand hand={gs['deck']} direction='center' />
           </div>
           <div className={styles.flex}>
-            <Hand hand={gs['east'].hand} direction='east' active={gs.active_player == 'east'} />
+            <Hand hand={gs['east'].hand} direction='east' active={gs.active_player == 'east'} vulnerability={gs.vulnerability} />
           </div>
         </div>
         <div className={styles.flex}>
@@ -87,7 +87,7 @@ const App = () => {
             <Auction gs={gs} />
           </div>
           <div className={styles.flex}>
-            <Hand hand={gs['south'].hand} direction='south' active={gs.active_player == 'south'} />
+            <Hand hand={gs['south'].hand} direction='south' active={gs.active_player == 'south'} vulnerability={gs.vulnerability} />
           </div>
           <div className={styles.flex}>
             <BiddingBox dispatchGamestate={dispatchGameState} gs={gs} />
