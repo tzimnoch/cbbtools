@@ -86,6 +86,7 @@ function parseVulnerability(vulnerability) {
 export function parseHandviewer(input) {
   var gs = initialGameState
 
+  // TODO: Replace with URLSearchParams to cope with &p={key=value&more_keys=value} and other issues/code cleanliness.
   for (var param of input.split('&')) {
     switch (param.charAt(0)) {
     case 'n': gs = {...gs, north: parseHand(param.slice(2)) }; break
