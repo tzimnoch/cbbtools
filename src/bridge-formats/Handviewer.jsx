@@ -22,8 +22,8 @@ function parseHand(h) {
     case '7': hand.push(newCard(currentSuit, 5)); break
     case '8': hand.push(newCard(currentSuit, 6)); break
     case '9': hand.push(newCard(currentSuit, 7)); break
+    case '0': // can use 10 instead of t
     case 't': hand.push(newCard(currentSuit, 8)); break
-    case '0': hand.push(newCard(currentSuit, 8)); break   // can use 10 instead of t
     case 'j': hand.push(newCard(currentSuit, 9)); break
     case 'q': hand.push(newCard(currentSuit, 10)); break
     case 'k': hand.push(newCard(currentSuit, 11)); break
@@ -57,7 +57,7 @@ function parseAuction(a) {
     case 'r': auction.push('r'); break
 
     // TODO: Set contract without an auction, e.g., a=-6hrw means final contract is 6H** by West without an auction
-    // May need a hook at a different level since this will alter the gamestate object and 
+    // May need a hook at a different level since this will alter the gamestate object and
     case '-': alert('Feature not yet implemented.'); break
     }
   }
